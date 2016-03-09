@@ -1,0 +1,8 @@
+#ifndef DPLL
+#define DPLL
+
+#include "data_types.h"
+
+void satisfiable(formula F, interpretation I);
+
+#endif //DPLL

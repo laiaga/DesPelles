@@ -1,0 +1,32 @@
+#ifndef DATA_TYPES
+#define DATA_TYPES
+
+#define TRUE 1
+#define FALSE 0
+
+/**
+ * Représentation d'une formule sous la forme d'un tableau de tableaux (matrice) contenant les littéraux
+ * m est le nombre de clauses
+ * n est le nombre de littéraux
+ * Ex : clauses=[[1,2,-3]
+ *       [3,-4]]
+ *       représente la CNF [(1 ou 2 ou non-3) et (3 ou  non-4)]
+ *       m=2 et n=4 dans le cas de l'exemple
+ */
+typedef struct
+{
+  int m;
+  int n;
+  int** clauses;
+} formula;
+
+/**
+ * Représente une interprétation sous la forme d'un tableau de taille n où une case i vaut TRUE si la variable est à vrai, FALSE sinon
+ */
+typedef struct
+{
+  int n;
+  int* values;
+} interpretation;
+
+#endif //DATA_TYPES
