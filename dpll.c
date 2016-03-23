@@ -6,14 +6,14 @@ void satisfiable(cnf F, interpretation I)
 	{
 		return 1;
 	}
-	else if(contains_empty(F))
+	else if(contains_empty_clause(F,I))
 	{
 		return 0;
 	}
 	else
 	{
 		int signe;
-		literal l = pur_ou_mono(F,&signe);
+		literal l = pur_ou_mono(F,I,&signe);
 		if(l != -1)
 		{
 			I[l] = signe;

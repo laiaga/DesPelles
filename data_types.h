@@ -8,6 +8,6 @@ typedef struct{
 	int nb_lit;
 	int nb_clauses;
 	int** formule;
-} *cnf;
+}* cnf;
 
 #endif //DATA_TYPES
