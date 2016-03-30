@@ -1,6 +1,7 @@
 #ifndef INOUT
 #define INOUT
 
+#include <regex.h>
 #include "utils.h"
 #include "data_types.h"
 

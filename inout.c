@@ -2,30 +2,30 @@
 
 void read(char * filename,  cnf * F)
 {
-  /*  FILE * file = fopen(filename,"r");
+  FILE * file = fopen(filename,"r");
   if(file)
     {
       int tmp;
+      char* buffer;
+      char res[10];
+      regex_t regex;
+      ssize_t read;
+      size_t len=0;
       
-      F = (cnf)malloc(sizeof(struct _cnf));
+      regcomp(&regex,"^[-?[:digit:]+]",0);
+      
+      (*F) = (cnf)malloc(sizeof(struct _cnf));
 
-      fscanf(file,"%d",&tmp);
-      F->nb_lit = tmp;
-      while (!feof (file))
-	{  
-	  tmp = fgetc(file);
-	  //if(tmp == '\n')printf("test");
-	  printf("%c|",tmp);
-	  if(tmp > 0)
-	    {
-	    }
-	  else
-	    {
-	    }
+      (*F)->nb_lit = tmp;
+      
+      while (read=getline(&buffer,&len,file) != -1)
+	{
+	  regexec(&regex, buffer, 10, &res, 0);
+	  printf("%s\n",buffer);
 	}
       
       fclose(file);
-      }*/
+    }
 }
 
 void write(char * filename, cnf F)

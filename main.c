@@ -28,14 +28,14 @@ void create_cnf(cnf * F)
 int main(int argc, char** argv)
 {
   cnf F=NULL;
-  //keyboard_cnf(&F);
-  create_cnf(&F);
+  //create_cnf(&F);
+  read("test",&F);
   display(F);
   int I[F->nb_lit+1];
   I[0] = UNDEF;
   I[1] = UNDEF;
   I[2] = UNDEF;
-  printf("%d\n",satisfiable_first_solution(F,I));
+  //printf("%d\n",satisfiable_first_solution(F,I));
   int i;
   return 0;
 }
