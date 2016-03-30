@@ -158,3 +158,22 @@ void copy(interpretation src, interpretation dest, int size)
       dest[i] = src[i];
     }
 }
+
+void display(cnf F){
+  formula f;
+  clause c;
+  f = F->f;
+  while(f != NULL)
+    {
+      c = f->c;
+
+      while(c != NULL)
+	{
+	  printf("%d \\/ ",c->lit);
+	  c = c->next;
+	}
+      printf("\n/\\");
+      
+      f = f->next;
+    }
+}

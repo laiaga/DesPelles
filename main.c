@@ -3,8 +3,8 @@
 
 int main(int argc, char** argv)
 {
-  cnf F;
-  read("test",F);
-  //printf("%d\n",F->nb_lit);
+  cnf F=NULL;
+  keyboard_cnf(F);
+  display(F);
   return 0;
 }

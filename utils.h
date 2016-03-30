@@ -49,4 +49,10 @@ literal random_lit(cnf F,interpretation I);
  */
 void copy(interpretation src,interpretation dest, int size);
 
+/**
+ * \brief Displays the formula on screen
+ * \param F the formula to be dispayed
+ */
+void display(cnf F);
+
 #endif //UTILS
