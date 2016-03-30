@@ -7,7 +7,7 @@ int is_empty(cnf F)
 }
 
 
-literal pure_or_mono(cnf F)
+literal pure_or_mono(cnf F, interpretation I)
 {
   int n = F->nb_lit;
   
@@ -62,8 +62,8 @@ literal pure_or_mono(cnf F)
       i=1;
       while(!ret && i<=n)
 	{
-	  if(pos[i] && !neg[i]) ret = i;
-	  if(!pos[i] && neg[i]) ret = -i;
+	  if(pos[i] && !neg[i] && I[i]==UNDEF) ret = i;
+	  if(!pos[i] && neg[i] && I[i]==UNDEF) ret = -i;
 	  i++;
 	}
     }
@@ -79,7 +79,7 @@ int contains_empty_clause(cnf F)
   while(f!= NULL && !ret)
     {
       if(f->c == NULL)
-	{
+ 	{
 	  ret = TRUE;
 	}
       f = f->next;
@@ -94,7 +94,8 @@ void simplify(cnf F, interpretation I)
   formula form, parentForm;
   form = F->f;
   parentForm = form;
-  
+
+  //Iterating through each clause of the formula 
   while(form != NULL)
     {
       curr = form->c;
@@ -103,39 +104,64 @@ void simplify(cnf F, interpretation I)
       
       while(curr != NULL && !skip)
 	{
+	  //If a literal appears as true and has benn interpreted as true 
 	  if(curr->lit > 0 && I[curr->lit] == TRUE)
 	    {
-	      parentForm->next = form->next;
-	      free(form);
-	      form = parentForm->next;
-	      skip = TRUE;
+	      //We remove the current clause from the formula
+	      if(parentForm ==form)
+		{
+		  F->f = form->next;
+		  free(form);
+		  form = F->f;
+		  parentForm = form;
+		}
+	      else
+		{
+		  parentForm->next = form->next;
+		  free(form);
+		  form = parentForm->next;
+		}
+	      skip = TRUE;	      
 	    }
-	  else if(curr->lit < 0 && I[curr->lit] == FALSE)
+	  //Same goes with false
+	  if(curr->lit < 0 && I[curr->lit] == FALSE)
 	    {
-	      parentForm->next = form->next;
-	      free(form);
-	      form = parentForm->next;
+	      if(parentForm ==form)
+		{
+		  F->f = form->next;
+		  free(form);
+		  form = F->f;
+		  parentForm = form;
+		}
+	      else
+		{
+		  parentForm->next = form->next;
+		  free(form);
+		  form = parentForm->next;
+		}
 	      skip = TRUE;
 	    }
-	  
+
+	  //However if a literal appears as true and is interpreted as false (or the opposite)
 	  if(curr->lit > 0 && I[curr->lit] == TRUE)
 	    {
+	      //We remove it from the clause
 	      pred->next = curr->next;
 	      free(curr);
 	      curr = pred;
 	    }
-	  else if(curr->lit < 0 && I[curr->lit] == FALSE)
+	  if(curr->lit < 0 && I[curr->lit] == FALSE)
 	    {
 	      pred->next = curr->next;
 	      free(curr);
 	      curr = pred;
-	    }
+	      }
 	  
 	  pred = curr;
 	  curr = curr->next;
 	}
       parentForm = form;
-      form = form->next;
+      if(form != NULL) form = form->next;
     }
 }
 
@@ -160,20 +186,45 @@ void copy(interpretation src, interpretation dest, int size)
 }
 
 void display(cnf F){
+  if(F==NULL)
+    {
+      perror("Trying to display an empty formula.");
+      return;
+    }
+  
   formula f;
-  clause c;
+  clause c;  
   f = F->f;
+  
   while(f != NULL)
     {
       c = f->c;
-
+      printf("(");
       while(c != NULL)
 	{
-	  printf("%d \\/ ",c->lit);
+	  printf("%d",c->lit);
+	  if(c->next != NULL) printf("|");
 	  c = c->next;
 	}
-      printf("\n/\\");
+      printf(")");
+      if(f->next != NULL) printf("\n^");
       
       f = f->next;
     }
+  printf("\n");
+}
+
+void display_interpretation(interpretation I, int n)
+{
+  int i;
+  printf("[");
+  for(i=1 ; i<n ; i++)
+    {
+      if(I[i]==TRUE) printf("T|");
+      if(I[i]==FALSE) printf("F|");
+      if(I[i]==UNDEF)printf("_|");	
+    }
+  if(I[i]==TRUE) printf("T]\n");
+  if(I[i]==FALSE) printf("F]\n");
+  if(I[i]==UNDEF)printf("_]\n");
 }

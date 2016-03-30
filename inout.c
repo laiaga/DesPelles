@@ -1,8 +1,8 @@
 #include "inout.h"
 
-void read(char * filename,  cnf F)
+void read(char * filename,  cnf * F)
 {
-  FILE * file = fopen(filename,"r");
+  /*  FILE * file = fopen(filename,"r");
   if(file)
     {
       int tmp;
@@ -25,7 +25,7 @@ void read(char * filename,  cnf F)
 	}
       
       fclose(file);
-    }
+      }*/
 }
 
 void write(char * filename, cnf F)
@@ -51,24 +51,24 @@ void write(char * filename, cnf F)
     }
 }
 
-void keyboard_cnf(cnf F)
+void keyboard_cnf(cnf * F)
 {
   int n,m,p,i,j;
   literal l;
   formula form = NULL;
   clause c = NULL, tmp = NULL;
-  F = (cnf)malloc(sizeof(struct _cnf));
+  (*F) = (cnf)malloc(sizeof(struct _cnf));
   
   printf("How many literals in the formula : ");
   scanf("%d",&n);
   
-  if(F==NULL)
+  if((*F)==NULL)
     {
       perror("Unable to allocate memory in keyboard_cnf : abort.");
       return;
     }
-  F->nb_lit = n;
-  F->f = form;
+  (*F)->nb_lit = n;
+  (*F)->f = form;
 
   printf("How many clauses in the formula : ");
   scanf("%d",&m);
@@ -103,10 +103,6 @@ void keyboard_cnf(cnf F)
 	      c = tmp;
 	    }
 	}
-      c = form->c;
-      if(c->next == NULL)printf("NULL\n");
-      else printf("non null\n");
-      printf("%d\n",form->c->next->lit);
       form = form->next;
     }
 }

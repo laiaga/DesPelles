@@ -4,6 +4,6 @@
 #include "utils.h"
 #include "data_types.h"
 
-int satisfiable(cnf F, interpretation I);
+int satisfiable_first_solution(cnf F, interpretation I);
 
 #endif //DPLL

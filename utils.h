@@ -15,9 +15,10 @@ int is_empty(cnf F);
 /**
  * \brief Searchs a cnf in order to find mono- or pure-literals
  * \param F the cnf to be searched
+ * \param I the interpretation of the cnf in order to know if the literal is already instantied
  * \return 0 if no such literal was found, the signed literal otherwise
  */
-literal pure_or_mono(cnf F);
+literal pure_or_mono(cnf F, interpretation I);
 
 /**
  * \brief Checks if a cnf contains an empty clause (and thus is unsolvable)
@@ -54,5 +55,12 @@ void copy(interpretation src,interpretation dest, int size);
  * \param F the formula to be dispayed
  */
 void display(cnf F);
+
+/**
+ * \brief Displays an interpretation of a formula 
+ * \param I the interpretation to be displayed
+ * \param n the number of literals
+ */
+void display_interpretation(interpretation I, int n);
 
 #endif //UTILS
