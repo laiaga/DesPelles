@@ -14,65 +14,79 @@ void read(char *filename, cnf *F) {
     val = char_to_int(tmp);
     (*F)->nb_lit = val;
 
-    formula f1 = NULL, f2 = NULL;
-    clause c1 = NULL, c2 = NULL;
+    //reading the first \r\n
+    tmp = fgetc(file);
+    tmp = fgetc(file);
+
+    formula  f=NULL;
+    clause c=NULL;
     
     while(!feof(file))
     {
-      //we allocate f2 to store clauses during this loop, then set it to be the successor of f1...
-      f2 = (formula)malloc(sizeof(struct _formula));
-      f2->next = NULL;
-      if(f1 == NULL)//...except if f1 is NULL, which means this is the first loop cycle
+     
+      if(f == NULL)//...except if f1 is NULL, which means this is the first loop cycle
       {
-        (*F)->f = f2;
-        f1 = f2;
+        f = malloc(sizeof(struct _formula));
+        (*F)->f = f;
       }
       else
       {
-        f1->next = f2;
+        f->next = malloc(sizeof(struct _formula));
+        f = f->next;
+        f->next = NULL;
       }
 
-      //Reset the clause pointers
-      c1 = NULL;
-      c2 = NULL;
+      //reinitialize the clause
+      c = NULL;
 
       //iterating until we reach end of line/file
       //reaching end of line means the clause is over
-      while ((tmp = fgetc(file)) != '\n' && tmp != '\r' && tmp != EOF)
+      while ((tmp = fgetc(file)) != '\n' && tmp != EOF)
       {
-        if(tmp-48>0)printf("Je lis : %d\n",tmp-48);
-        //we allocate c2 to store the current litteral being read in our clause
-        c2 = (clause)malloc(sizeof(struct node));
-        c2->next = NULL;
-        if(c1 == NULL)
-        {
-          f2->c = c2;
-          c1 = c2;
-        }
-        else
-        {
-          c1->next = c2;
-        }
-
         //then we chesck the value of tmp in order to know what to do 
         switch(tmp)
         {
           case '-'://if we read a -, it is necessarly followed by a number, that we negate
             tmp = fgetc(file);
-            printf("Je lis : -%d\n",tmp-48);
             val = char_to_int(tmp)*(-1);
-            c2->lit = val;
+
+            if(c == NULL)
+            {
+              c = malloc(sizeof(struct node));
+              c->next = NULL;
+              f->c = c;
+            }
+            else
+            {
+              c->next = malloc(sizeof(struct node));
+              c = c->next;
+              c->next = NULL;
+            }
+            c->lit = val;
+            break;
           case ' '://if it's a space, we skip it
+            break;
+          case '\r':
             break;
           default://otherwise, we add it to our clause
             val = char_to_int(tmp);
-            c2->lit = val;
+
+            if(c == NULL)
+            {
+              c = malloc(sizeof(struct node));
+              c->next = NULL;
+              f->c = c;
+            }
+            else
+            {
+              c->next = malloc(sizeof(struct node));
+              c = c->next;
+              c->next = NULL;
+            }
+            c->lit = val;
             break;
         }
-
-        c1 = c1->next;
       }
-      f1 = f1->next;
     }
 
     fclose(file);
