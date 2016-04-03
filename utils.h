@@ -15,14 +15,15 @@ int is_empty(cnf F);
 /**
  * \brief Searchs a cnf in order to find mono- or pure-literals
  * \param F the cnf to be searched
- * \param I the interpretation of the cnf in order to know if the literal is already instantied
+ * \param I the interpretation of the cnf in order to know if the literal is
+ * already instantied
  * \return 0 if no such literal was found, the signed literal otherwise
  */
 literal pure_or_mono(cnf F, interpretation I);
 
 /**
  * \brief Checks if a cnf contains an empty clause (and thus is unsolvable)
- * \param F the cnf to be checked
+ * \param F the cnf to be checkedP
  * \return true if there is an empty clause, FALSE otherwise
  */
 int contains_empty_clause(cnf F);
@@ -32,15 +33,15 @@ int contains_empty_clause(cnf F);
  * \param F the cnf to be simplified
  * \param I the interpretation
  */
-void simplify(cnf F,interpretation I);
+void simplify(cnf F, interpretation I);
 
 /**
- * \brief Selects a random non-yet instanciated literal 
- * \param F the cnf to be searched 
+ * \brief Selects a random non-yet instanciated literal
+ * \param F the cnf to be searched
  * \param I the interpretation of F
  * \return the index of the first acceptable literal found
  */
-literal random_lit(cnf F,interpretation I);
+literal random_lit(cnf F, interpretation I);
 
 /**
  * \brief Copies an interpretation
@@ -48,7 +49,7 @@ literal random_lit(cnf F,interpretation I);
  * \param dest the destination of the copy
  * \param size the size of each interpretation (must be the same for the two)
  */
-void copy(interpretation src,interpretation dest, int size);
+void copy(interpretation src, interpretation dest, int size);
 
 /**
  * \brief Displays the formula on screen
@@ -57,10 +58,12 @@ void copy(interpretation src,interpretation dest, int size);
 void display(cnf F);
 
 /**
- * \brief Displays an interpretation of a formula 
+ * \brief Displays an interpretation of a formula
  * \param I the interpretation to be displayed
  * \param n the number of literals
  */
 void display_interpretation(interpretation I, int n);
 
-#endif //UTILS
+int char_to_int(char c);
+
+#endif // UTILS

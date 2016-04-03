@@ -2,8 +2,7 @@
 #include "inout.h"
 #include "data_types.h"
 
-void create_cnf(cnf * F)
-{
+void create_cnf(cnf *F) {
   *F = (cnf)malloc(sizeof(struct _cnf));
   (*F)->nb_lit = 2;
   (*F)->f = (formula)malloc(sizeof(struct _formula));
@@ -20,22 +19,15 @@ void create_cnf(cnf * F)
   c = (clause)malloc(sizeof(struct node));
   c->lit = -1;
   c->next = (clause)malloc(sizeof(struct node));
-  c->next->lit=-2;
-  c->next->next=NULL;
-  tmp->c = c;  
+  c->next->lit = -2;
+  c->next->next = NULL;
+  tmp->c = c;
 }
 
-int main(int argc, char** argv)
-{
-  cnf F=NULL;
-  //create_cnf(&F);
-  read("test",&F);
+int main(int argc, char **argv) {
+  cnf F = NULL;
+  read(argv[1], &F);
+  //printf("%d\n",F->f->next->c->lit);
   display(F);
-  int I[F->nb_lit+1];
-  I[0] = UNDEF;
-  I[1] = UNDEF;
-  I[2] = UNDEF;
-  //printf("%d\n",satisfiable_first_solution(F,I));
-  int i;
   return 0;
 }

@@ -6,4 +6,4 @@
 
 int satisfiable_first_solution(cnf F, interpretation I);
 
-#endif //DPLL
+#endif // DPLL

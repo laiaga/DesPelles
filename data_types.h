@@ -7,21 +7,21 @@
 
 typedef int literal;
 
-typedef int * interpretation;
+typedef int* interpretation;
 
 typedef struct node {
-  literal lit;
-  struct node * next;
+    literal lit;
+    struct node* next;
 } * clause;
 
-typedef struct _formula{
-  clause c;
-  struct _formula * next;
+typedef struct _formula {
+    clause c;
+    struct _formula* next;
 } * formula;
 
-typedef struct _cnf{
-  int nb_lit;
-  formula f;
+typedef struct _cnf {
+    int nb_lit;
+    formula f;
 } * cnf;
 
-#endif //DATA_TYPES
+#endif // DATA_TYPES
