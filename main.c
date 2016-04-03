@@ -8,8 +8,8 @@ int main(int argc, char **argv) {
   display(F);
 
   int i;
-  int I[F->nb_lit];
-  for(i=0 ; i<F->nb_lit ; i++)
+  int I[F->nb_lit+1];
+  for(i=0 ; i<F->nb_lit+1 ; i++)
   {
     I[i] = UNDEF;
   }

@@ -38,7 +38,8 @@ literal pure_or_mono(cnf F, interpretation I) {
     }
     if (size == 1) {
       l = form->c->lit;
-      monoFound = TRUE;
+      if(l>0 && I[l] == UNDEF) monoFound = TRUE;
+      if(l<0 && I[-l] == UNDEF) monoFound = TRUE;
     }
     form = form->next;
   }
@@ -55,7 +56,6 @@ literal pure_or_mono(cnf F, interpretation I) {
       i++;
     }
   }
-
   return ret;
 }
 
@@ -73,7 +73,7 @@ int contains_empty_clause(cnf F) {
 
 void simplify(cnf F, interpretation I) {
   clause pred, curr;
-  int skip;
+  int skip,b=FALSE;
   formula form, parentForm;
   form = F->f;
   parentForm = form;
@@ -83,8 +83,8 @@ void simplify(cnf F, interpretation I) {
     curr = form->c;
     pred = curr;
     skip = FALSE;
-
     while (curr != NULL && !skip) {
+      b = FALSE;
       // If a literal appears as true and has benn interpreted as true
       if (curr->lit > 0 && I[curr->lit] == TRUE) {
         // We remove the current clause from the formula
@@ -101,7 +101,7 @@ void simplify(cnf F, interpretation I) {
         skip = TRUE;
       }
       // Same goes with false
-      if (curr->lit < 0 && I[curr->lit] == FALSE) {
+      if (curr->lit < 0 && I[-curr->lit] == FALSE) {
         if (parentForm == form) {
           F->f = form->next;
           free(form);
@@ -117,24 +117,45 @@ void simplify(cnf F, interpretation I) {
 
       // However if a literal appears as true and is interpreted as false (or
       // the opposite)
-      if (curr->lit > 0 && I[curr->lit] == TRUE) {
+      if (curr->lit > 0 && I[curr->lit] == FALSE) {
         // We remove it from the clause
-        pred->next = curr->next;
-        free(curr);
-        curr = pred;
+        if(pred == curr)
+        {
+          curr = curr->next;
+          //free(pred);
+          form->c = curr;
+          pred = curr;
+          b=TRUE;
+        }
+        else
+        {
+          pred->next = curr->next;
+          free(curr);
+          pred = curr;
+        }
       }
-      if (curr->lit < 0 && I[curr->lit] == FALSE) {
-        pred->next = curr->next;
-        free(curr);
-        curr = pred;
+      else if (curr->lit < 0 && I[-curr->lit] == TRUE) {
+        if(pred == curr)
+        {
+          curr = curr->next;
+          free(pred);
+          form->c = curr;
+          pred = curr;
+          b=TRUE;
+        }
+        else
+        {
+          pred->next = curr->next;
+          free(curr);
+          pred = curr;
+        }
       }
 
       pred = curr;
-      curr = curr->next;
+      if(!b) curr = curr->next;
     }
     parentForm = form;
-    if (form != NULL)
-      form = form->next;
+    if(!skip) form = form->next;
   }
 }
 
@@ -148,11 +169,61 @@ literal random_lit(cnf F, interpretation I) {
   return ret;
 }
 
-void copy(interpretation src, interpretation dest, int size) {
-  int i;
-  for (i = 0; i < size; i++) {
-    dest[i] = src[i];
+void copy(cnf src, cnf dest) {
+  if(src == NULL || dest == NULL)
+  {
+    perror("Trying to copy empty cnf");
+    return;
   }
+
+  dest->nb_lit = src->nb_lit;
+
+  formula fsrc = src->f;
+
+  formula fdest = malloc(sizeof(struct _formula));
+  dest->f = fdest;
+  //copie de fdest->c = fsrc->c;
+  if(fsrc->c == NULL) fdest->c = NULL;
+  clause csrc = fsrc->c;
+  clause cdest = malloc(sizeof(struct node));
+  fdest->c = cdest;
+  cdest->lit = csrc->lit;
+  clause c = cdest;
+  csrc = csrc->next;
+  while(csrc != NULL)
+  {
+    c->next = malloc(sizeof(struct node));
+    c = c->next;
+    c->lit = csrc->lit;
+    csrc = csrc->next;
+  }
+  c->next = NULL;
+
+  formula p = fdest;
+  fsrc = fsrc->next;
+  while(fsrc != NULL)
+  {
+    p->next = malloc(sizeof(struct _formula));
+    p = p->next;
+    //p->c = fsrc->c;
+    if(fsrc->c == NULL) p->c = NULL;
+    clause csrc = fsrc->c;
+    clause cdest = malloc(sizeof(struct node));
+    p->c = cdest;
+    cdest->lit = csrc->lit;
+    clause c = cdest;
+    csrc = csrc->next;
+    while(csrc != NULL)
+    {
+      c->next = malloc(sizeof(struct node));
+      c = c->next;
+      c->lit = csrc->lit;
+      csrc = csrc->next;
+    }
+    c->next = NULL;
+    fsrc = fsrc->next;
+  }
+  p->next = NULL;
 }
 
 void display(cnf F) {
@@ -165,15 +236,15 @@ void display(cnf F) {
   clause c;
   f = F->f;
 
-  printf("%d littéraux\n",F->nb_lit);
+  printf("%d littéral/aux\n",F->nb_lit);
 
   while (f != NULL) {
     c = f->c;
     printf("(");
-    while (c != NULL) {
+    while (c != NULL) 
+    {
       printf("%d", c->lit);
-      if (c->next != NULL)
-        printf("|");
+      if (c->next != NULL) printf("|");
       c = c->next;
     }
     printf(")");
@@ -209,7 +280,6 @@ int char_to_int(char c)
   int ret = 0;
   if(c<49 || c>57)
   {
-    printf("____%d\n",c);
     perror("Trying to convert an unaccepted char to a number. You can convert only [1-9].\n");
   }
   else

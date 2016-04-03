@@ -43,13 +43,7 @@ void simplify(cnf F, interpretation I);
  */
 literal random_lit(cnf F, interpretation I);
 
-/**
- * \brief Copies an interpretation
- * \param src the source of the copy
- * \param dest the destination of the copy
- * \param size the size of each interpretation (must be the same for the two)
- */
-void copy(interpretation src, interpretation dest, int size);
+void copy(cnf src, cnf dest);
 
 /**
  * \brief Displays the formula on screen
