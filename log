@@ -1,0 +1,307 @@
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:22:1: erreur : unknown type name ‘literal’
+ literal pure_or_mono(cnf * F, int I[]);
+ ^~~~~~~
+dpll.c: Dans la fonction ‘satisfiable_first_solution’:
+dpll.c:4:16: erreur : incompatible type for argument 1 of ‘is_empty’
+   if (is_empty(*F))
+                ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:13:5: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ int is_empty(cnf * F);
+     ^~~~~~~~
+dpll.c:8:14: erreur : ‘TRUE’ undeclared (first use in this function)
+       return TRUE; // If the cnf is empty then it's satisfied
+              ^~~~
+dpll.c:8:14: note : each undeclared identifier is reported only once for each function it appears in
+dpll.c:10:34: erreur : incompatible type for argument 1 of ‘contains_empty_clause’
+   else if (contains_empty_clause(*F))
+                                  ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:29:5: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ int contains_empty_clause(cnf * F);
+     ^~~~~~~~~~~~~~~~~~~~~
+dpll.c:12:14: erreur : ‘FALSE’ undeclared (first use in this function)
+       return FALSE; // If the cnf contains an empty clause then it's
+              ^~~~~
+dpll.c:17:28: erreur : incompatible type for argument 1 of ‘pure_or_mono’
+       int l = pure_or_mono(*F, I);
+                            ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:22:9: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ literal pure_or_mono(cnf * F, int I[]);
+         ^~~~~~~~~~~~
+dpll.c:27:20: erreur : incompatible type for argument 1 of ‘simplify’
+           simplify(*F, I); // Then we make the according simplifications in the cnf...
+                    ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:36:6: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ void simplify(cnf * F, int I[]);
+      ^~~~~~~~
+dpll.c:28:45: erreur : incompatible type for argument 1 of ‘satisfiable_first_solution’
+           return satisfiable_first_solution(*F, I); //... and check if our new cnf is satisfiable_first_solution
+                                             ^
+dpll.c:3:5: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ int satisfiable_first_solution(cnf * F, int I[]) {
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+dpll.c:33:30: erreur : incompatible type for argument 1 of ‘random_lit’
+           int l = random_lit(*F, I); // Otherwise, we choose a random non-instanciated literal
+                              ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:44:5: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ int random_lit(cnf * F, int I[]);
+     ^~~~~~~~~~
+dpll.c:47:16: erreur : incompatible type for argument 1 of ‘copy’
+           copy(*F,*cp);;
+                ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:46:6: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ void copy(cnf * src, cnf * dest);
+      ^~~~
+dpll.c:47:19: erreur : incompatible type for argument 2 of ‘copy’
+           copy(*F,*cp);;
+                   ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:46:6: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ void copy(cnf * src, cnf * dest);
+      ^~~~
+dpll.c:48:20: erreur : incompatible type for argument 1 of ‘simplify’
+           simplify(*F, I);
+                    ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:36:6: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ void simplify(cnf * F, int I[]);
+      ^~~~~~~~
+dpll.c:50:42: erreur : incompatible type for argument 1 of ‘satisfiable_first_solution’
+           if (satisfiable_first_solution(*F, I)) return TRUE;
+                                          ^
+dpll.c:3:5: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ int satisfiable_first_solution(cnf * F, int I[]) {
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+dpll.c:54:24: erreur : incompatible type for argument 1 of ‘simplify’
+               simplify(*cp, Ibis);
+                        ^
+In file included from dpll.h:4:0,
+                 from dpll.c:1:
+utils.h:36:6: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ void simplify(cnf * F, int I[]);
+      ^~~~~~~~
+dpll.c:55:49: erreur : incompatible type for argument 1 of ‘satisfiable_first_solution’
+               return satisfiable_first_solution(*cp, Ibis);
+                                                 ^
+dpll.c:3:5: note : expected ‘cnf * {alias struct _cnf *}’ but argument is of type ‘cnf {alias struct _cnf}’
+ int satisfiable_first_solution(cnf * F, int I[]) {
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+dpll.c:59:1: attention : contrôle a atteint la fin non void de la fonction [-Wreturn-type]
+ }
+ ^
+In file included from inout.h:4:0,
+                 from inout.c:1:
+utils.h:22:1: erreur : unknown type name ‘literal’
+ literal pure_or_mono(cnf * F, int I[]);
+ ^~~~~~~
+inout.c: Dans la fonction ‘read’:
+inout.c:65:25: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+                       c = c->next;
+                         ^
+inout.c:86:25: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+                       c = c->next;
+                         ^
+inout.c:95:7: erreur : expected ‘}’ before ‘else’
+       else
+       ^~~~
+In file included from dpll.h:4:0,
+                 from main.c:1:
+utils.h:22:1: erreur : unknown type name ‘literal’
+ literal pure_or_mono(cnf * F, int I[]);
+ ^~~~~~~
+In file included from utils.c:1:0:
+utils.h:22:1: erreur : unknown type name ‘literal’
+ literal pure_or_mono(cnf * F, int I[]);
+ ^~~~~~~
+utils.c:5:1: erreur : unknown type name ‘literal’
+ literal pure_or_mono(cnf * F, int I)
+ ^~~~~~~
+utils.c:5:9: erreur : conflicting types for ‘pure_or_mono’
+ literal pure_or_mono(cnf * F, int I)
+         ^~~~~~~~~~~~
+In file included from utils.c:1:0:
+utils.h:22:9: note : previous declaration of ‘pure_or_mono’ was here
+ literal pure_or_mono(cnf * F, int I[]);
+         ^~~~~~~~~~~~
+utils.c: Dans la fonction ‘pure_or_mono’:
+utils.c:7:12: erreur : ‘F’ is a pointer; did you mean to use ‘->’?
+   int n = F.nb_lit;
+            ^
+            ->
+utils.c:9:18: erreur : ‘F’ is a pointer; did you mean to use ‘->’?
+   formula * f = F.f;
+                  ^
+                  ->
+utils.c:18:10: erreur : ‘form’ undeclared (first use in this function)
+   while (form != NULL && !mono_found)
+          ^~~~
+utils.c:18:10: note : each undeclared identifier is reported only once for each function it appears in
+utils.c:34:13: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+           c = c->next;
+             ^
+utils.c:39:22: erreur : subscripted value is neither array nor pointer nor vector
+           if(l>0 && I[l] == -1) mono_found = 1;
+                      ^
+utils.c:40:22: erreur : subscripted value is neither array nor pointer nor vector
+           if(l<0 && I[-l] == -1) mono_found = 1;
+                      ^
+utils.c:54:37: erreur : subscripted value is neither array nor pointer nor vector
+           if (pos[i] && !neg[i] && I[i] == -1)
+                                     ^
+utils.c:56:37: erreur : subscripted value is neither array nor pointer nor vector
+           if (!pos[i] && neg[i] && I[i] == -1)
+                                     ^
+utils.c: Dans la fonction ‘simplify’:
+utils.c:84:10: erreur : incompatible types when assigning to type ‘formula {alias struct _formula}’ from type ‘formula * {alias struct _formula *}’
+   curr_f = F->f;
+          ^
+utils.c:88:17: erreur : invalid operands to binary != (have ‘formula {alias struct _formula}’ and ‘void *’)
+   while (curr_f != NULL)
+                 ^~
+utils.c:90:22: erreur : invalid type argument of ‘->’ (have ‘formula {alias struct _formula}’)
+       curr_c = curr_f->c;
+                      ^~
+utils.c:91:7: erreur : ‘pred_c’ undeclared (first use in this function)
+       pred_c = curr_c;
+       ^~~~~~
+utils.c:100:19: erreur : ‘pred_f’ undeclared (first use in this function)
+               if (pred_f == curr_f)
+                   ^~~~~~
+utils.c:102:32: erreur : invalid type argument of ‘->’ (have ‘formula {alias struct _formula}’)
+                   F->f = curr_f->next;
+                                ^~
+utils.c:103:24: erreur : incompatible type for argument 1 of ‘free’
+                   free(curr_f);
+                        ^~~~~~
+In file included from utils.h:4:0,
+                 from utils.c:1:
+/usr/include/stdlib.h:483:13: note : expected ‘void *’ but argument is of type ‘formula {alias struct _formula}’
+ extern void free (void *__ptr) __THROW;
+             ^~~~
+utils.c:104:26: erreur : incompatible types when assigning to type ‘formula {alias struct _formula}’ from type ‘formula * {alias struct _formula *}’
+                   curr_f = F->f;
+                          ^
+utils.c:109:40: erreur : invalid type argument of ‘->’ (have ‘formula {alias struct _formula}’)
+                   pred_f->next = curr_f->next;
+                                        ^~
+utils.c:110:24: erreur : incompatible type for argument 1 of ‘free’
+                   free(curr_f);
+                        ^~~~~~
+In file included from utils.h:4:0,
+                 from utils.c:1:
+/usr/include/stdlib.h:483:13: note : expected ‘void *’ but argument is of type ‘formula {alias struct _formula}’
+ extern void free (void *__ptr) __THROW;
+             ^~~~
+utils.c:120:32: erreur : invalid type argument of ‘->’ (have ‘formula {alias struct _formula}’)
+                   F->f = curr_f->next;
+                                ^~
+utils.c:121:24: erreur : incompatible type for argument 1 of ‘free’
+                   free(curr_f);
+                        ^~~~~~
+In file included from utils.h:4:0,
+                 from utils.c:1:
+/usr/include/stdlib.h:483:13: note : expected ‘void *’ but argument is of type ‘formula {alias struct _formula}’
+ extern void free (void *__ptr) __THROW;
+             ^~~~
+utils.c:122:26: erreur : incompatible types when assigning to type ‘formula {alias struct _formula}’ from type ‘formula * {alias struct _formula *}’
+                   curr_f = F->f;
+                          ^
+utils.c:127:40: erreur : invalid type argument of ‘->’ (have ‘formula {alias struct _formula}’)
+                   pred_f->next = curr_f->next;
+                                        ^~
+utils.c:128:24: erreur : incompatible type for argument 1 of ‘free’
+                   free(curr_f);
+                        ^~~~~~
+In file included from utils.h:4:0,
+                 from utils.c:1:
+/usr/include/stdlib.h:483:13: note : expected ‘void *’ but argument is of type ‘formula {alias struct _formula}’
+ extern void free (void *__ptr) __THROW;
+             ^~~~
+utils.c:141:19: erreur : ‘curr’ undeclared (first use in this function)
+                   curr = curr->next;
+                   ^~~~
+utils.c:143:25: erreur : invalid type argument of ‘->’ (have ‘formula {alias struct _formula}’)
+                   curr_f->c = curr_c;
+                         ^~
+utils.c:160:25: erreur : invalid type argument of ‘->’ (have ‘formula {alias struct _formula}’)
+                   curr_f->c = curr_c;
+                         ^~
+utils.c:173:25: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+           if(!b) curr_c = curr_c->next;
+                         ^
+utils.c:176:32: erreur : invalid type argument of ‘->’ (have ‘formula {alias struct _formula}’)
+       if(!skip) curr_f = curr_f->next;
+                                ^~
+utils.c:83:11: attention : variable ‘old_f’ set but not used [-Wunused-but-set-variable]
+   formula old_f, curr_f;
+           ^~~~~
+utils.c:81:12: attention : unused variable ‘old_c’ [-Wunused-variable]
+   clause * old_c, * curr_c;
+            ^~~~~
+utils.c: Hors de toute fonction :
+utils.c:180:5: erreur : conflicting types for ‘random_lit’
+ int random_lit(cnf * F, int I)
+     ^~~~~~~~~~
+In file included from utils.c:1:0:
+utils.h:44:5: note : previous declaration of ‘random_lit’ was here
+ int random_lit(cnf * F, int I[]);
+     ^~~~~~~~~~
+utils.c: Dans la fonction ‘random_lit’:
+utils.c:183:16: erreur : ‘F’ is a pointer; did you mean to use ‘->’?
+   while (i <= F.nb_lit && !ret)
+                ^
+                ->
+utils.c:185:12: erreur : subscripted value is neither array nor pointer nor vector
+       if (I[i] == -1)
+            ^
+utils.c: Dans la fonction ‘copy’:
+utils.c:205:24: erreur : ‘dest_c’ undeclared (first use in this function)
+   if(src_f->c == NULL) dest_c->c = NULL;
+                        ^~~~~~
+utils.c:206:20: erreur : ‘fsrc’ undeclared (first use in this function)
+   clause * src_c = fsrc->c;
+                    ^~~~
+utils.c:211:10: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   src_c  = src_c->next;
+          ^
+utils.c:215:9: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+       c = c->next;
+         ^
+utils.c:217:13: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+       src_c = src_c->next;
+             ^
+utils.c:228:15: erreur : ‘clause {alias struct _clause}’ has no member named ‘c’
+       if(src_c->c == NULL) p->c = NULL;
+               ^~
+utils.c:234:13: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+       src_c = src_c->next;
+             ^
+utils.c:238:13: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+           c = c->next;
+             ^
+utils.c:240:11: erreur : ‘csrc’ undeclared (first use in this function)
+           csrc = src_c->next;
+           ^~~~
+utils.c: Dans la fonction ‘display’:
+utils.c:258:8: erreur : ‘F’ is a pointer; did you mean to use ‘->’?
+   f = F.f;
+        ^
+        ->
+utils.c:270:13: attention : assignment from incompatible pointer type [-Wincompatible-pointer-types]
+           c = c->next;
+             ^

@@ -1,277 +1,300 @@
 #include "utils.h"
 
-int is_empty(cnf F) { return (F->f == NULL); }
+int is_empty(cnf * F) { return (F->f == NULL); }
 
-literal pure_or_mono(cnf F, interpretation I) {
-  int n = F->nb_lit;
+literal pure_or_mono(cnf * F, int I)
+{
+  int n = F.nb_lit;
+  int neg[n + 1], pos[n + 1], mono_found=0, i=0, l, ret=0,size;
+  formula * f = F.f;
+  clause * c;
 
-  literal l, ret;
-  int neg[n + 1], pos[n + 1], monoFound; // 0 is not a recognized literal, hence
-                                         // the need to have n+1 length
-  int i, size;
-  formula form;
-  clause tmp;
-  monoFound = FALSE;
-  i = 0;
-  ret = 0;
-  form = F->f;
-
-  for (i = 0; i <= n; i++) {
-    neg[i] = FALSE; // neg will allow to remember if we found a "FALSE"
-                    // occurence of a literal
-    pos[i] = FALSE; // pos will do the same with "TRUE"
-  }
-
-  while (form != NULL && !monoFound) {
-    size = 0; // Incremented with each literal of a clause in order to know if
-              // we have a mono-literal
-    tmp = form->c;
-
-    while (tmp != NULL) {
-      if (tmp->lit > 0) {
-        pos[tmp->lit] = TRUE;
-      } else {
-        neg[-(tmp->lit)] = TRUE;
-      }
-      size++;
-      tmp = tmp->next;
+  for (i = 0; i <= n; i++)
+    {
+      neg[i] = 0; // neg will allow to remember if we found a "0" occurence of a int
+      pos[i] = 0; // pos will do the same with "1"
     }
-    if (size == 1) {
-      l = form->c->lit;
-      if(l>0 && I[l] == UNDEF) monoFound = TRUE;
-      if(l<0 && I[-l] == UNDEF) monoFound = TRUE;
-    }
-    form = form->next;
-  }
 
-  if (monoFound) {
-    ret = l;
-  } else {
-    i = 1;
-    while (!ret && i <= n) {
-      if (pos[i] && !neg[i] && I[i] == UNDEF)
-        ret = i;
-      if (!pos[i] && neg[i] && I[i] == UNDEF)
-        ret = -i;
-      i++;
+  while (form != NULL && !mono_found)
+    {
+      size = 0; // Incremented with each int of a clause in order to know if we have a mono-int
+      c = form->c;
+
+      while (c != NULL)
+        {
+          if (c->lit > 0)
+            {
+              pos[c->lit] = 1;
+            }
+          else
+            {
+              neg[-(c->lit)] = 1;
+            }
+          size++;
+          c = c->next;
+        }
+      if (size == 1)
+        {
+          l = f->c->lit;
+          if(l>0 && I[l] == -1) mono_found = 1;
+          if(l<0 && I[-l] == -1) mono_found = 1;
+        }
+      form = form->next;
     }
-  }
+
+  if (mono_found)
+    {
+      ret = l;
+    }
+  else
+    {
+      i = 1;
+      while (!ret && i <= n)
+        {
+          if (pos[i] && !neg[i] && I[i] == -1)
+            ret = i;
+          if (!pos[i] && neg[i] && I[i] == -1)
+            ret = -i;
+          i++;
+        }
+    }
   return ret;
 }
 
-int contains_empty_clause(cnf F) {
-  int i = 0, ret = FALSE;
-  formula f = F->f;
-  while (f != NULL && !ret) {
-    if (f->c == NULL) {
-      ret = TRUE;
+int contains_empty_clause(cnf * F)
+{
+  int ret = 0;
+  formula * f = F->f;
+  while (f != NULL && !ret)
+    {
+      if (f->c == NULL)
+        {
+          ret = 1;
+        }
+      f = f->next;
     }
-    f = f->next;
-  }
   return ret;
 }
 
-void simplify(cnf F, interpretation I) {
-  clause pred, curr;
-  int skip,b=FALSE;
-  formula form, parentForm;
-  form = F->f;
-  parentForm = form;
+void simplify(cnf * F, int I[])
+{
+  clause * old_c, * curr_c;
+  int skip,b=0;
+  formula old_f, curr_f;
+  curr_f = F->f;
+  old_f = curr_f;
 
   // Iterating through each clause of the formula
-  while (form != NULL) {
-    curr = form->c;
-    pred = curr;
-    skip = FALSE;
-    while (curr != NULL && !skip) {
-      b = FALSE;
-      // If a literal appears as true and has benn interpreted as true
-      if (curr->lit > 0 && I[curr->lit] == TRUE) {
-        // We remove the current clause from the formula
-        if (parentForm == form) {
-          F->f = form->next;
-          free(form);
-          form = F->f;
-          parentForm = form;
-        } else {
-          parentForm->next = form->next;
-          free(form);
-          form = parentForm->next;
-        }
-        skip = TRUE;
-      }
-      // Same goes with false
-      if (curr->lit < 0 && I[-curr->lit] == FALSE) {
-        if (parentForm == form) {
-          F->f = form->next;
-          free(form);
-          form = F->f;
-          parentForm = form;
-        } else {
-          parentForm->next = form->next;
-          free(form);
-          form = parentForm->next;
-        }
-        skip = TRUE;
-      }
+  while (curr_f != NULL)
+    {
+      curr_c = curr_f->c;
+      pred_c = curr_c;
+      skip = 0;
+      while (curr_c != NULL && !skip)
+        {
+          b = 0;
+          // If a int appears as true and has benn interpreted as true
+          if (curr_c->lit > 0 && I[curr_c->lit] == 1)
+            {
+              // We remove the current clause from the formula
+              if (pred_f == curr_f)
+                {
+                  F->f = curr_f->next;
+                  free(curr_f);
+                  curr_f = F->f;
+                  pred_f = curr_f;
+                }
+              else
+                {
+                  pred_f->next = curr_f->next;
+                  free(curr_f);
+                  curr_f = pred_f->next;
+                }
+              skip = 1;
+            }
+          // Same goes with false
+          if (curr_c->lit < 0 && I[-curr_c->lit] == 0)
+            {
+              if (pred_f == curr_f)
+                {
+                  F->f = curr_f->next;
+                  free(curr_f);
+                  curr_f = F->f;
+                  pred_f = curr_f;
+                }
+              else
+                {
+                  pred_f->next = curr_f->next;
+                  free(curr_f);
+                  curr_f = pred_f->next;
+                }
+              skip = 1;
+            }
 
-      // However if a literal appears as true and is interpreted as false (or
-      // the opposite)
-      if (curr->lit > 0 && I[curr->lit] == FALSE) {
-        // We remove it from the clause
-        if(pred == curr)
-        {
-          curr = curr->next;
-          //free(pred);
-          form->c = curr;
-          pred = curr;
-          b=TRUE;
-        }
-        else
-        {
-          pred->next = curr->next;
-          free(curr);
-          pred = curr;
-        }
-      }
-      else if (curr->lit < 0 && I[-curr->lit] == TRUE) {
-        if(pred == curr)
-        {
-          curr = curr->next;
-          free(pred);
-          form->c = curr;
-          pred = curr;
-          b=TRUE;
-        }
-        else
-        {
-          pred->next = curr->next;
-          free(curr);
-          pred = curr;
-        }
-      }
+          // However if a int appears as true and is interpreted as false (or
+          // the opposite)
+          if (curr_c->lit > 0 && I[curr_c->lit] == 0)
+            {
+              // We remove it from the clause
+              if(pred_c == curr_c)
+                {
+                  curr = curr->next;
+                  free(pred_c);
+                  curr_f->c = curr_c;
+                  pred_c = curr_c;
+                  b=1;
+                }
+              else
+                {
+                  pred_c->next = curr_c->next;
+                  free(curr_c);
+                  curr_c = pred_c->next;
+                }
+            }
+          else if (curr_c->lit < 0 && I[-curr_c->lit] == 1)
+            {
+              if(pred_c == curr_c)
+                {
+                  curr = curr->next;
+                  free(pred_c);
+                  curr_f->c = curr_c;
+                  pred_c = curr_c;
+                  b=1;
+                }
+              else
+                {
+                  pred_c->next = curr_c->next;
+                  free(curr_c);
+                  curr_c = pred_c->next;
+                }
+            }
 
-      pred = curr;
-      if(!b) curr = curr->next;
+          pred_c = curr_c;
+          if(!b) curr_c = curr_c->next;
+        }
+      pred_f = curr_f;
+      if(!skip) curr_f = curr_f->next;
     }
-    parentForm = form;
-    if(!skip) form = form->next;
-  }
 }
 
-literal random_lit(cnf F, interpretation I) {
+int random_lit(cnf * F, int I)
+{
   int i = 1, ret = 0;
-  while (i <= F->nb_lit && !ret) {
-    if (I[i] == UNDEF)
-      ret = i;
-    i++;
-  }
+  while (i <= F.nb_lit && !ret)
+    {
+      if (I[i] == -1)
+        ret = i;
+      i++;
+    }
   return ret;
 }
 
-void copy(cnf src, cnf dest) {
+void copy(cnf * src, cnf * dest) {
   if(src == NULL || dest == NULL)
-  {
-    perror("Trying to copy empty cnf");
-    return;
-  }
+    {
+      perror("Trying to copy empty cnf");
+      return;
+    }
 
   dest->nb_lit = src->nb_lit;
 
-  formula fsrc = src->f;
-
-  formula fdest = malloc(sizeof(struct _formula));
-  dest->f = fdest;
+  formula * src_f = src->f;
+  formula * dest_f = malloc(sizeof(struct _formula));
+  dest->f = dest_f;
   //copie de fdest->c = fsrc->c;
-  if(fsrc->c == NULL) fdest->c = NULL;
-  clause csrc = fsrc->c;
-  clause cdest = malloc(sizeof(struct node));
-  fdest->c = cdest;
-  cdest->lit = csrc->lit;
-  clause c = cdest;
-  csrc = csrc->next;
-  while(csrc != NULL)
-  {
-    c->next = malloc(sizeof(struct node));
-    c = c->next;
-    c->lit = csrc->lit;
-    csrc = csrc->next;
-  }
+  if(src_f->c == NULL) dest_c->c = NULL;
+  clause * src_c = fsrc->c;
+  clause * dest_c = malloc(sizeof(struct _clause));
+  dest_f->c = dest_c;
+  dest_c->lit = src_c->lit;
+  clause * c = dest_c;
+  src_c  = src_c->next;
+  while(src_c != NULL)
+    {
+      c->next = malloc(sizeof(struct _clause));
+      c = c->next;
+      c->lit = src_c->lit;
+      src_c = src_c->next;
+    }
   c->next = NULL;
 
-  formula p = fdest;
-  fsrc = fsrc->next;
-  while(fsrc != NULL)
-  {
-    p->next = malloc(sizeof(struct _formula));
-    p = p->next;
-    //p->c = fsrc->c;
-    if(fsrc->c == NULL) p->c = NULL;
-    clause csrc = fsrc->c;
-    clause cdest = malloc(sizeof(struct node));
-    p->c = cdest;
-    cdest->lit = csrc->lit;
-    clause c = cdest;
-    csrc = csrc->next;
-    while(csrc != NULL)
+  formula * p = dest_f;
+  src_f = src_f->next;
+  while(src_f != NULL)
     {
-      c->next = malloc(sizeof(struct node));
-      c = c->next;
-      c->lit = csrc->lit;
-      csrc = csrc->next;
+      p->next = malloc(sizeof(struct _formula));
+      p = p->next;
+      //p->c = fsrc->c;
+      if(src_c->c == NULL) p->c = NULL;
+      src_c = src_f->c;
+      dest_c = malloc(sizeof(struct _clause));
+      p->c = dest_c;
+      dest_c->lit = src_c->lit;
+      c = dest_c;
+      src_c = src_c->next;
+      while(src_c != NULL)
+        {
+          c->next = malloc(sizeof(struct _clause));
+          c = c->next;
+          c->lit = src_c->lit;
+          csrc = src_c->next;
+        }
+      c->next = NULL;
+      src_f = src_f->next;
     }
-    c->next = NULL;
-    fsrc = fsrc->next;
-  }
   p->next = NULL;
 }
 
-void display(cnf F) {
-  if (F == NULL) {
-    perror("Trying to display an empty formula.");
-    return;
-  }
+void display(cnf * F)
+{
+  if (F == NULL)
+    {
+      perror("Trying to display an empty formula.");
+      return;
+    }
 
-  formula f;
-  clause c;
-  f = F->f;
+  formula * f;
+  clause * c;
+  f = F.f;
 
   printf("%d littéral/aux\n",F->nb_lit);
 
-  while (f != NULL) {
-    c = f->c;
-    printf("(");
-    while (c != NULL) 
+  while (f != NULL)
     {
-      printf("%d", c->lit);
-      if (c->next != NULL) printf("|");
-      c = c->next;
-    }
-    printf(")");
-    if (f->next != NULL)
-      printf("\n^");
+      c = f->c;
+      printf("(");
+      while (c != NULL) 
+        {
+          printf("%d", c->lit);
+          if (c->next != NULL) printf("|");
+          c = c->next;
+        }
+      printf(")");
+      if (f->next != NULL)
+        printf("\n^");
 
-    f = f->next;
-  }
+      f = f->next;
+    }
   printf("\n");
 }
 
-void display_interpretation(interpretation I, int n) {
+void display_int(int I[], int n) {
   int i;
   printf("[");
-  for (i = 1; i < n; i++) {
-    if (I[i] == TRUE)
-      printf("T|");
-    if (I[i] == FALSE)
-      printf("F|");
-    if (I[i] == UNDEF)
-      printf("_|");
-  }
-  if (I[i] == TRUE)
+  for (i = 1; i < n; i++)
+    {
+      if (I[i] == 1)
+        printf("T|");
+      if (I[i] == 0)
+        printf("F|");
+      if (I[i] == -1)
+        printf("_|");
+    }
+  if (I[i] == 1)
     printf("T]\n");
-  if (I[i] == FALSE)
+  if (I[i] == 0)
     printf("F]\n");
-  if (I[i] == UNDEF)
+  if (I[i] == -1)
     printf("_]\n");
 }
 
@@ -279,12 +302,12 @@ int char_to_int(char c)
 {
   int ret = 0;
   if(c<49 || c>57)
-  {
-    perror("Trying to convert an unaccepted char to a number. You can convert only [1-9].\n");
-  }
+    {
+      perror("Trying to convert an unaccepted char to a number. You can convert only [1-9].\n");
+    }
   else
-  {
-    ret = c-48;
-  }
+    {
+      ret = c-48;
+    }
   return ret;
 }
