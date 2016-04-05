@@ -4,8 +4,8 @@ void read(char * filename, cnf ** F)
 {
   FILE * file = fopen(filename, "r");
 
-  if (file)
-    {//check if the file opened correctly
+  if (file)//check if the file opened correctly
+    {
       char tmp;
       int val;
 
@@ -17,17 +17,16 @@ void read(char * filename, cnf ** F)
       val = char_to_int(tmp);
       (*F)->nb_lit = val;
 
-      //reading the first \r\n
-      tmp = fgetc(file);
+      //reading the first \n
       tmp = fgetc(file);
 
       formula * f=NULL;
       clause * c=NULL;
-    
+
       while(!feof(file))
         {
-     
-          if(f == NULL)//...except if f1 is NULL, which means this is the first loop cycle
+
+          if(f == NULL)
             {
               f = malloc(sizeof(struct _formula));
               (*F)->f = f;
@@ -46,10 +45,10 @@ void read(char * filename, cnf ** F)
           //reaching end of line means the clause is over
           while ((tmp = fgetc(file)) != '\n' && tmp != EOF)
             {
-              //then we chesck the value of tmp in order to know what to do 
+              //then we check the value of tmp in order to know what to do 
               switch(tmp)
                 {
-                case '-'://if we read a -, it is necessarly followed by a number, that we negate
+                case '-'://if we read a -, it is necessarly followed by a number, which we negate
                   tmp = fgetc(file);
                   val = char_to_int(tmp)*(-1);
 
@@ -68,8 +67,6 @@ void read(char * filename, cnf ** F)
                   c->lit = val;
                   break;
                 case ' '://if it's a space, we skip it
-                  break;
-                case '\r':
                   break;
                 default://otherwise, we add it to our clause
                   val = char_to_int(tmp);
@@ -91,10 +88,9 @@ void read(char * filename, cnf ** F)
                 }
             }
         }
-
-      else
-        {
-          perror("Unable to open file in function read.");
-        }
     }
-
+  else
+    {
+      perror("Unable to open file in function read.");
+    }
+}

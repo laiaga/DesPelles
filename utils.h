@@ -60,4 +60,6 @@ void display_interpretation(int I[], int n);
 
 int char_to_int(char c);
 
+void free_cnf(cnf ** F);
+
 #endif // UTILS

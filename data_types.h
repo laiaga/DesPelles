@@ -4,7 +4,7 @@
 typedef struct _clause
 {
   int lit;
-  struct node * next;
+  struct _clause * next;
 } clause;
 
 typedef struct _formula

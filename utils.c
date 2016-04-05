@@ -2,11 +2,11 @@
 
 int is_empty(cnf * F) { return (F->f == NULL); }
 
-literal pure_or_mono(cnf * F, int I)
+int pure_or_mono(cnf * F, int I[])
 {
-  int n = F.nb_lit;
+  int n = F->nb_lit;
   int neg[n + 1], pos[n + 1], mono_found=0, i=0, l, ret=0,size;
-  formula * f = F.f;
+  formula * f = F->f;
   clause * c;
 
   for (i = 0; i <= n; i++)
@@ -15,10 +15,10 @@ literal pure_or_mono(cnf * F, int I)
       pos[i] = 0; // pos will do the same with "1"
     }
 
-  while (form != NULL && !mono_found)
+  while (f != NULL && !mono_found)
     {
       size = 0; // Incremented with each int of a clause in order to know if we have a mono-int
-      c = form->c;
+      c = f->c;
 
       while (c != NULL)
         {
@@ -39,7 +39,7 @@ literal pure_or_mono(cnf * F, int I)
           if(l>0 && I[l] == -1) mono_found = 1;
           if(l<0 && I[-l] == -1) mono_found = 1;
         }
-      form = form->next;
+      f = f->next;
     }
 
   if (mono_found)
@@ -78,11 +78,11 @@ int contains_empty_clause(cnf * F)
 
 void simplify(cnf * F, int I[])
 {
-  clause * old_c, * curr_c;
+  clause * pred_c, * curr_c;
   int skip,b=0;
-  formula old_f, curr_f;
+  formula * pred_f, * curr_f;
   curr_f = F->f;
-  old_f = curr_f;
+  pred_f = curr_f;
 
   // Iterating through each clause of the formula
   while (curr_f != NULL)
@@ -96,6 +96,7 @@ void simplify(cnf * F, int I[])
           // If a int appears as true and has benn interpreted as true
           if (curr_c->lit > 0 && I[curr_c->lit] == 1)
             {
+              printf("%d\n",curr_c->lit);
               // We remove the current clause from the formula
               if (pred_f == curr_f)
                 {
@@ -115,6 +116,7 @@ void simplify(cnf * F, int I[])
           // Same goes with false
           if (curr_c->lit < 0 && I[-curr_c->lit] == 0)
             {
+              printf("%d\n",curr_c->lit);
               if (pred_f == curr_f)
                 {
                   F->f = curr_f->next;
@@ -135,10 +137,12 @@ void simplify(cnf * F, int I[])
           // the opposite)
           if (curr_c->lit > 0 && I[curr_c->lit] == 0)
             {
+              printf("%d\n",curr_c->lit);
               // We remove it from the clause
               if(pred_c == curr_c)
                 {
-                  curr = curr->next;
+                  printf("coucou\n");
+                  curr_c = curr_c->next;
                   free(pred_c);
                   curr_f->c = curr_c;
                   pred_c = curr_c;
@@ -155,7 +159,7 @@ void simplify(cnf * F, int I[])
             {
               if(pred_c == curr_c)
                 {
-                  curr = curr->next;
+                  curr_c = curr_c->next;
                   free(pred_c);
                   curr_f->c = curr_c;
                   pred_c = curr_c;
@@ -177,10 +181,10 @@ void simplify(cnf * F, int I[])
     }
 }
 
-int random_lit(cnf * F, int I)
+int random_lit(cnf * F, int I[])
 {
   int i = 1, ret = 0;
-  while (i <= F.nb_lit && !ret)
+  while (i <= F->nb_lit && !ret)
     {
       if (I[i] == -1)
         ret = i;
@@ -202,8 +206,8 @@ void copy(cnf * src, cnf * dest) {
   formula * dest_f = malloc(sizeof(struct _formula));
   dest->f = dest_f;
   //copie de fdest->c = fsrc->c;
-  if(src_f->c == NULL) dest_c->c = NULL;
-  clause * src_c = fsrc->c;
+  if(src_f->c == NULL) dest_f->c = NULL;
+  clause * src_c = src_f->c;
   clause * dest_c = malloc(sizeof(struct _clause));
   dest_f->c = dest_c;
   dest_c->lit = src_c->lit;
@@ -225,7 +229,7 @@ void copy(cnf * src, cnf * dest) {
       p->next = malloc(sizeof(struct _formula));
       p = p->next;
       //p->c = fsrc->c;
-      if(src_c->c == NULL) p->c = NULL;
+      if(src_f->c == NULL) p->c = NULL;
       src_c = src_f->c;
       dest_c = malloc(sizeof(struct _clause));
       p->c = dest_c;
@@ -237,7 +241,7 @@ void copy(cnf * src, cnf * dest) {
           c->next = malloc(sizeof(struct _clause));
           c = c->next;
           c->lit = src_c->lit;
-          csrc = src_c->next;
+          src_c = src_c->next;
         }
       c->next = NULL;
       src_f = src_f->next;
@@ -255,7 +259,7 @@ void display(cnf * F)
 
   formula * f;
   clause * c;
-  f = F.f;
+  f = F->f;
 
   printf("%d littéral/aux\n",F->nb_lit);
 
@@ -278,7 +282,7 @@ void display(cnf * F)
   printf("\n");
 }
 
-void display_int(int I[], int n) {
+void display_interpretation(int I[], int n) {
   int i;
   printf("[");
   for (i = 1; i < n; i++)
@@ -310,4 +314,25 @@ int char_to_int(char c)
       ret = c-48;
     }
   return ret;
+}
+
+void free_cnf(cnf ** F)
+{
+  formula * f = (*F)->f, * tmp_f = NULL;
+  clause * c = NULL, * tmp_c = NULL;
+  while(f != NULL)
+    {
+      c = f->c;
+      while(c != NULL)
+        {
+          tmp_c = c;
+          c = c->next;
+          free(tmp_c);
+        }
+
+      tmp_f = f;
+      f = f->next;
+      free(tmp_f);
+    }
+  free(*F);
 }
