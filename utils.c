@@ -33,10 +33,10 @@ int pure_or_mono(cnf * F, int I[])
           size++;
           c = c->next;
         }
-      if (size == 1)
+      if (size == 1)//if the clause we just went over was 1-literal long, then this is a mono-literal
         {
           l = f->c->lit;
-          if(l>0 && I[l] == -1) mono_found = 1;
+          if(l>0 && I[l] == -1) mono_found = 1;//still have to check if he is not instantied yet
           if(l<0 && I[-l] == -1) mono_found = 1;
         }
       f = f->next;
@@ -49,7 +49,7 @@ int pure_or_mono(cnf * F, int I[])
   else
     {
       i = 1;
-      while (!ret && i <= n)
+      while (!ret && i <= n)//going through each literal of the cnf to check if one is pure (appeared only as pos or neg)
         {
           if (pos[i] && !neg[i] && I[i] == -1)
             ret = i;
@@ -96,7 +96,6 @@ void simplify(cnf * F, int I[])
           // If a int appears as true and has benn interpreted as true
           if (curr_c->lit > 0 && I[curr_c->lit] == 1)
             {
-              printf("%d\n",curr_c->lit);
               // We remove the current clause from the formula
               if (pred_f == curr_f)
                 {
@@ -116,7 +115,6 @@ void simplify(cnf * F, int I[])
           // Same goes with false
           if (curr_c->lit < 0 && I[-curr_c->lit] == 0)
             {
-              printf("%d\n",curr_c->lit);
               if (pred_f == curr_f)
                 {
                   F->f = curr_f->next;
@@ -137,11 +135,9 @@ void simplify(cnf * F, int I[])
           // the opposite)
           if (curr_c->lit > 0 && I[curr_c->lit] == 0)
             {
-              printf("%d\n",curr_c->lit);
               // We remove it from the clause
               if(pred_c == curr_c)
                 {
-                  printf("coucou\n");
                   curr_c = curr_c->next;
                   free(pred_c);
                   curr_f->c = curr_c;
@@ -176,8 +172,12 @@ void simplify(cnf * F, int I[])
           pred_c = curr_c;
           if(!b) curr_c = curr_c->next;
         }
-      pred_f = curr_f;
-      if(!skip) curr_f = curr_f->next;
+      
+      if(!skip)
+        {
+          pred_f = curr_f;
+          curr_f = curr_f->next;
+        }
     }
 }
 
@@ -256,7 +256,7 @@ void display(cnf * F)
       perror("Trying to display an empty formula.");
       return;
     }
-
+ 
   formula * f;
   clause * c;
   f = F->f;
@@ -275,8 +275,8 @@ void display(cnf * F)
         }
       printf(")");
       if (f->next != NULL)
-        printf("\n^");
-
+        printf("\n");
+      
       f = f->next;
     }
   printf("\n");

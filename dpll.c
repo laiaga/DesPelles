@@ -48,9 +48,7 @@ int satisfiable_first_solution(cnf * F, int I[])
           if (satisfiable_first_solution(F, I)) return 1;
           else
             {
-              printf("_____\n");
               simplify(cp, Ibis);
-              printf("_____\n");
               return satisfiable_first_solution(cp, Ibis);
             }
         }
