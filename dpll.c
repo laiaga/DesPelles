@@ -36,13 +36,14 @@ int satisfiable_first_solution(cnf * F, int I[])
               return 0;
             }
 
+          //Copy of I and F so that we can try the 2 possible values for l (otherwise we couldn't backtrack)
           int Ibis[F->nb_lit+1];
           int i;
           for(i=1 ; i<=F->nb_lit ; i++) Ibis[i] = I[i];
           I[l] = 1;
           Ibis[l] = 0;
           cnf * cp = malloc(sizeof(struct _cnf));
-          copy(F,cp);;
+          copy(F,cp);
           simplify(F, I);
 
           if (satisfiable_first_solution(F, I)) return 1;
@@ -53,5 +54,5 @@ int satisfiable_first_solution(cnf * F, int I[])
             }
         }
     }
-  return -1;
+  return -1;//This case doesn't happen ; here only for gcc warning since it's a non-void function
 }

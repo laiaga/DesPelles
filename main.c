@@ -3,8 +3,9 @@
 #include "data_types.h"
 #include "utils.h"
 
+//you have to specify the name of the file containing the cnf as the main's first argument 
 int main(int argc, char **argv) {
-  if(argc != 2)
+  if(argc < 2)
     {
       perror("You have to specify a path to a file in argument.");
       return -1;

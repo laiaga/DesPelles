@@ -93,11 +93,11 @@ void simplify(cnf * F, int I[])
       while (curr_c != NULL && !skip)
         {
           b = 0;
-          // If a int appears as true and has benn interpreted as true
+          // If a literal appears as true and has benn interpreted as true
           if (curr_c->lit > 0 && I[curr_c->lit] == 1)
             {
               // We remove the current clause from the formula
-              if (pred_f == curr_f)
+              if (pred_f == curr_f)//if we were at the very begining, the processing is different
                 {
                   F->f = curr_f->next;
                   free(curr_f);
@@ -131,7 +131,7 @@ void simplify(cnf * F, int I[])
               skip = 1;
             }
 
-          // However if a int appears as true and is interpreted as false (or
+          // However if a literal appears as true and is interpreted as false (or
           // the opposite)
           if (curr_c->lit > 0 && I[curr_c->lit] == 0)
             {
@@ -170,10 +170,10 @@ void simplify(cnf * F, int I[])
             }
 
           pred_c = curr_c;
-          if(!b) curr_c = curr_c->next;
+          if(!b) curr_c = curr_c->next;//in the case pred_c==curr_c, this code snipet has to be executed earlier 
         }
       
-      if(!skip)
+      if(!skip)//if a clause was satisfied, then we already went to the next clause, no need to do it again here
         {
           pred_f = curr_f;
           curr_f = curr_f->next;
@@ -305,13 +305,13 @@ void display_interpretation(int I[], int n) {
 int char_to_int(char c)
 {
   int ret = 0;
-  if(c<49 || c>57)
+  if(c<49 || c>57)//i.e. if the number is between 1 and 9
     {
       perror("Trying to convert an unaccepted char to a number. You can convert only [1-9].\n");
     }
   else
     {
-      ret = c-48;
+      ret = c-48;//48 is the ASCII code for 0
     }
   return ret;
 }

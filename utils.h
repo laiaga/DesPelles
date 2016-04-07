@@ -43,6 +43,11 @@ void simplify(cnf * F, int I[]);
  */
 int random_lit(cnf * F, int I[]);
 
+/**
+ * \brief Copies a cnf into another
+ * \param src the cnf to be copied
+ * \param dest the empty cnf to be filled 
+ */
 void copy(cnf * src, cnf * dest);
 
 /**
@@ -58,8 +63,17 @@ void display(cnf * F);
  */
 void display_interpretation(int I[], int n);
 
+/**
+ * \brief Converts a char to the corresponding int (only for 1 to 9)
+ * \param c the char to convert
+ * \return the integer value of c
+ */
 int char_to_int(char c);
 
+/**
+ * \brief Processes a cnf and frees all of its components, then frees the cnf itself
+ * \param F the cnf to be freed
+ */
 void free_cnf(cnf ** F);
 
 #endif // UTILS
